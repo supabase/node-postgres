@@ -1,5 +1,5 @@
 {
-  "name": "@supabase/pg",
+  "name": "pg",
   "version": "8.14.1",
   "description": "PostgreSQL client - pure javascript & libpq with the same API",
   "keywords": [
