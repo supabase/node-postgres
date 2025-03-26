@@ -1,5 +1,5 @@
 {
-  "name": "pg-native",
+  "name": "@supabase/pg-native",
   "version": "3.3.0",
   "description": "A slightly nicer interface to Postgres over node-libpq",
   "main": "index.js",
