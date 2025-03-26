@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/brianc/node-postgres.git",
+    "url": "git://github.com/supabase/node-postgres.git",
     "directory": "packages/pg-connection-string"
   },
   "keywords": [
@@ -23,9 +23,9 @@
   "author": "Blaine Bublitz <blaine@iceddev.com> (http://iceddev.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brianc/node-postgres/issues"
+    "url": "https://github.com/supabase/node-postgres/issues"
   },
-  "homepage": "https://github.com/brianc/node-postgres/tree/master/packages/pg-connection-string",
+  "homepage": "https://github.com/supabase/node-postgres/tree/master/packages/pg-connection-string",
   "devDependencies": {
     "chai": "^4.1.1",
     "coveralls": "^3.0.4",
