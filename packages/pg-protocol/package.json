@@ -1,5 +1,5 @@
 {
-  "name": "pg-protocol",
+  "name": "@supabase/pg-protocol",
   "version": "0.0.1",
   "description": "The postgres client/server binary protocol, implemented in TypeScript",
   "main": "dist/index.js",
