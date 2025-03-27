@@ -20,6 +20,7 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "prepublish": "yarn build",
+    "prepare": "yarn build",
     "pretest": "yarn build"
   },
   "repository": {
