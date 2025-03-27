@@ -6167,10 +6167,10 @@ pg-protocol@^1.2.0, pg-protocol@^1.8.0:
   resolved "https://registry.yarnpkg.com/pg-protocol/-/pg-protocol-1.8.0.tgz#c707101dd07813868035a44571488e4b98639d48"
   integrity sha512-jvuYlEkL03NRvOoyoRktBK7+qU5kOvlAwvmrH8sr3wbLrOdVWsRxQfz8mMy9sZFsqJ1hEWNfdWKI4SAmoL+j7g==
 
-"pg-protocol@npm:@supabase/pg-protocol@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@supabase/pg-protocol/-/pg-protocol-0.0.1.tgz#ef7bb9f92db4961653f599217cf504149aa0d967"
-  integrity sha512-j/P+hc/dxp9djRxxCSxSae+H05mpSVCQyeRWsEXulQWv3u5aTpGV3E8qmNIiTHeQ7t2pQIYp2PIVr2DpRTad0A==
+"pg-protocol@npm:@supabase/pg-protocol@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@supabase/pg-protocol/-/pg-protocol-0.0.2.tgz#95dd98022cc26bf6c80f6dda05181a2816ffc5ae"
+  integrity sha512-OLp5LeWRmfJy4vwV753hsCE90vzNSTSAwhsbinCIeoT455DHBufrkktVc4YvPXYEFj+EzpVKw/N0piX+AvBMBg==
 
 pg-types@^2.1.0, pg-types@^2.2.0:
   version "2.2.0"
