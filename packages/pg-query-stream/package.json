@@ -37,15 +37,15 @@
     "concat-stream": "~1.0.1",
     "eslint-plugin-promise": "^6.0.1",
     "mocha": "^10.5.2",
-    "pg": "^8.14.1",
+    "pg": "workspace:*",
     "stream-spec": "~0.3.5",
     "ts-node": "^8.5.4",
     "typescript": "^4.0.3"
   },
   "peerDependencies": {
-    "pg": "^8"
+    "pg": "workspace:*"
   },
   "dependencies": {
-    "pg-cursor": "^2.13.1"
+    "pg-cursor": "workspace:*"
   }
 }

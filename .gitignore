@@ -10,3 +10,10 @@ dist
 /.eslintcache
 .vscode/
 manually-test-on-heroku.js
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

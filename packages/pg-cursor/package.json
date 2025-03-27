@@ -18,9 +18,9 @@
   "license": "MIT",
   "devDependencies": {
     "mocha": "^10.5.2",
-    "pg": "^8.14.1"
+    "pg": "workspace:*"
   },
   "peerDependencies": {
-    "pg": "^8"
+    "pg": "workspace:*"
   }
 }
