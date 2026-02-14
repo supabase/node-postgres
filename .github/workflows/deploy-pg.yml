@@ -13,6 +13,10 @@ on:
         required: false
         type: string
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -28,7 +32,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # Ensure npm 11.5.1 or later is installed for trusted publishing support
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - name: Publish to npm
         run: cd packages/pg && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
