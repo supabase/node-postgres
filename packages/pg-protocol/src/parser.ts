@@ -157,80 +157,86 @@ export class Parser {
   private handlePacket(offset: number, code: number, length: number, bytes: Buffer): BackendMessage {
     const { reader } = this
 
-    // NOTE: This undesirably retains the buffer in `this.reader` if the `parse*Message` calls below throw. However, those should only throw in the case of a protocol error, which normally results in the reader being discarded.
+    // NOTE: This undesirably retains the buffer in `this.reader` if the `parse*Message` calls below throw. The try/catch below ensures the reader is always released, even on protocol errors, and surfaces the failure as a DatabaseError to the consumer instead of an uncatchable exception in the parse stream.
     reader.setBuffer(offset, bytes)
 
     let message: BackendMessage
 
-    switch (code) {
-      case MessageCodes.BindComplete:
-        message = bindComplete
-        break
-      case MessageCodes.ParseComplete:
-        message = parseComplete
-        break
-      case MessageCodes.CloseComplete:
-        message = closeComplete
-        break
-      case MessageCodes.NoData:
-        message = noData
-        break
-      case MessageCodes.PortalSuspended:
-        message = portalSuspended
-        break
-      case MessageCodes.CopyDone:
-        message = copyDone
-        break
-      case MessageCodes.ReplicationStart:
-        message = replicationStart
-        break
-      case MessageCodes.EmptyQuery:
-        message = emptyQuery
-        break
-      case MessageCodes.DataRow:
-        message = parseDataRowMessage(reader)
-        break
-      case MessageCodes.CommandComplete:
-        message = parseCommandCompleteMessage(reader)
-        break
-      case MessageCodes.ReadyForQuery:
-        message = parseReadyForQueryMessage(reader)
-        break
-      case MessageCodes.NotificationResponse:
-        message = parseNotificationMessage(reader)
-        break
-      case MessageCodes.AuthenticationResponse:
-        message = parseAuthenticationResponse(reader, length)
-        break
-      case MessageCodes.ParameterStatus:
-        message = parseParameterStatusMessage(reader)
-        break
-      case MessageCodes.BackendKeyData:
-        message = parseBackendKeyData(reader)
-        break
-      case MessageCodes.ErrorMessage:
-        message = parseErrorMessage(reader, 'error')
-        break
-      case MessageCodes.NoticeMessage:
-        message = parseErrorMessage(reader, 'notice')
-        break
-      case MessageCodes.RowDescriptionMessage:
-        message = parseRowDescriptionMessage(reader)
-        break
-      case MessageCodes.ParameterDescriptionMessage:
-        message = parseParameterDescriptionMessage(reader)
-        break
-      case MessageCodes.CopyIn:
-        message = parseCopyInMessage(reader)
-        break
-      case MessageCodes.CopyOut:
-        message = parseCopyOutMessage(reader)
-        break
-      case MessageCodes.CopyData:
-        message = parseCopyData(reader, length)
-        break
-      default:
-        return new DatabaseError('received invalid response: ' + code.toString(16), length, 'error')
+    try {
+      switch (code) {
+        case MessageCodes.BindComplete:
+          message = bindComplete
+          break
+        case MessageCodes.ParseComplete:
+          message = parseComplete
+          break
+        case MessageCodes.CloseComplete:
+          message = closeComplete
+          break
+        case MessageCodes.NoData:
+          message = noData
+          break
+        case MessageCodes.PortalSuspended:
+          message = portalSuspended
+          break
+        case MessageCodes.CopyDone:
+          message = copyDone
+          break
+        case MessageCodes.ReplicationStart:
+          message = replicationStart
+          break
+        case MessageCodes.EmptyQuery:
+          message = emptyQuery
+          break
+        case MessageCodes.DataRow:
+          message = parseDataRowMessage(reader)
+          break
+        case MessageCodes.CommandComplete:
+          message = parseCommandCompleteMessage(reader)
+          break
+        case MessageCodes.ReadyForQuery:
+          message = parseReadyForQueryMessage(reader)
+          break
+        case MessageCodes.NotificationResponse:
+          message = parseNotificationMessage(reader)
+          break
+        case MessageCodes.AuthenticationResponse:
+          message = parseAuthenticationResponse(reader, length)
+          break
+        case MessageCodes.ParameterStatus:
+          message = parseParameterStatusMessage(reader)
+          break
+        case MessageCodes.BackendKeyData:
+          message = parseBackendKeyData(reader)
+          break
+        case MessageCodes.ErrorMessage:
+          message = parseErrorMessage(reader, 'error')
+          break
+        case MessageCodes.NoticeMessage:
+          message = parseErrorMessage(reader, 'notice')
+          break
+        case MessageCodes.RowDescriptionMessage:
+          message = parseRowDescriptionMessage(reader)
+          break
+        case MessageCodes.ParameterDescriptionMessage:
+          message = parseParameterDescriptionMessage(reader)
+          break
+        case MessageCodes.CopyIn:
+          message = parseCopyInMessage(reader)
+          break
+        case MessageCodes.CopyOut:
+          message = parseCopyOutMessage(reader)
+          break
+        case MessageCodes.CopyData:
+          message = parseCopyData(reader, length)
+          break
+        default:
+          reader.setBuffer(0, emptyBuffer)
+          return new DatabaseError('received invalid response: ' + code.toString(16), length, 'error')
+      }
+    } catch (error) {
+      reader.setBuffer(0, emptyBuffer)
+      return new DatabaseError(`exception received while handling packet: ${error}`, length, 'error')
     }
 
     reader.setBuffer(0, emptyBuffer)
