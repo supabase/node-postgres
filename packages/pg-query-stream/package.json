@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/brianc/node-postgres.git",
+    "url": "git://github.com/supabase/node-postgres.git",
     "directory": "packages/pg-query-stream"
   },
   "keywords": [
@@ -34,7 +34,7 @@
   "author": "Brian M. Carlson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brianc/node-postgres/issues"
+    "url": "https://github.com/supabase/node-postgres/issues"
   },
   "devDependencies": {
     "@types/chai": "^4.2.13",

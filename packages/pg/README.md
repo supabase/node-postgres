@@ -9,7 +9,7 @@ Non-blocking PostgreSQL client for Node.js. Pure JavaScript and optional native 
 ## Install
 
 ```sh
-$ npm install pg
+$ npm install @supabase/pg
 ```
 
 ---
