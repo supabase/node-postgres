@@ -1,5 +1,5 @@
 {
-  "name": "pg-protocol",
+  "name": "@supabase/pg-protocol",
   "version": "1.13.0",
   "description": "The postgres client/server binary protocol, implemented in TypeScript",
   "main": "dist/index.js",
@@ -33,7 +33,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/brianc/node-postgres.git",
+    "url": "git://github.com/supabase/node-postgres.git",
     "directory": "packages/pg-protocol"
   },
   "files": [
