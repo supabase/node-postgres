@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'packages/pg-protocol/**'
+      - '.github/workflows/deploy-pg-protocol.yml'
   workflow_dispatch:
     inputs:
       version:
@@ -20,6 +21,16 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # IMPORTANT: install/build/publish strictly inside packages/pg-protocol/
+    # to avoid touching the workspace root. The root yarn.lock contains the
+    # `pg-protocol: npm:@supabase/pg-protocol@^X.Y.Z` alias, which would fail
+    # resolution any time we bump pg-protocol's version (the new version is
+    # not on npm yet — that's exactly what this workflow is publishing).
+    # pg-protocol has no runtime deps and only TS toolchain devDeps, so
+    # `npm install` inside the package directory is fully self-contained.
+    defaults:
+      run:
+        working-directory: packages/pg-protocol
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -29,15 +40,19 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: Install pg-protocol devDependencies (isolated, no workspace root)
+        # --workspaces=false + --prefix . is required to stop npm from
+        # walking up to the workspace root package.json. Without it, npm
+        # tries to resolve every workspace package's deps and trips on
+        # the unpublished `@supabase/pg-protocol@^X.Y.Z` alias in pg.
+        run: npm install --no-package-lock --no-audit --no-fund --workspaces=false --prefix .
 
       - name: Build package
-        run: cd packages/pg-protocol && yarn build
+        run: npm run build
 
       # Ensure npm 11.5.1 or later is installed for trusted publishing support
       - name: Update npm
         run: npm install -g npm@latest
 
       - name: Publish to npm
-        run: cd packages/pg-protocol && npm publish
+        run: npm publish

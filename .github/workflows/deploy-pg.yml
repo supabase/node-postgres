@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'packages/pg/**'
+      - '.github/workflows/deploy-pg.yml'
   workflow_dispatch:
     inputs:
       version:
@@ -20,6 +21,17 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # IMPORTANT: do NOT run a workspace-root install here. pg's
+    # package.json declares `pg-protocol: npm:@supabase/pg-protocol@^X.Y.Z`,
+    # and any time we bump pg-protocol's version this workflow would fire
+    # before that version is on npm (deploy-pg-protocol.yml runs in
+    # parallel on the same merge commit). Workspace install would then
+    # fail at resolution. pg is plain JavaScript (no build step, no TS
+    # compile), so `npm publish` can pack the source files listed under
+    # the `files` field directly without resolving any dependencies.
+    defaults:
+      run:
+        working-directory: packages/pg
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -29,12 +41,9 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
       # Ensure npm 11.5.1 or later is installed for trusted publishing support
       - name: Update npm
         run: npm install -g npm@latest
 
       - name: Publish to npm
-        run: cd packages/pg && npm publish
+        run: npm publish
