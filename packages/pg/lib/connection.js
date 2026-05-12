@@ -1,6 +1,6 @@
 'use strict'
 
-var EventEmitter = require('events').EventEmitter
+const EventEmitter = require('events').EventEmitter
 
 const { parse, serialize } = require('pg-protocol')
 const { getStream, getSecureStream } = require('./stream')
@@ -22,14 +22,13 @@ class Connection extends EventEmitter {
 
     this._keepAlive = config.keepAlive
     this._keepAliveInitialDelayMillis = config.keepAliveInitialDelayMillis
-    this.lastBuffer = false
     this.parsedStatements = {}
     this.ssl = config.ssl || false
     this._ending = false
     this._emitMessage = false
     this._maxResultSize = config.maxResultSize
     this._currentResultSize = 0
-    var self = this
+    const self = this
     this.on('newListener', function (eventName) {
       if (eventName === 'message') {
         self._emitMessage = true
@@ -38,7 +37,7 @@ class Connection extends EventEmitter {
   }
 
   connect(port, host) {
-    var self = this
+    const self = this
 
     this._connecting = true
     this.stream.setNoDelay(true)
@@ -69,7 +68,7 @@ class Connection extends EventEmitter {
     }
 
     this.stream.once('data', function (buffer) {
-      var responseCode = buffer.toString('utf8')
+      const responseCode = buffer.toString('utf8')
       switch (responseCode) {
         case 'S': // Server supports SSL connections, continue with a secure connection
           break
@@ -93,7 +92,7 @@ class Connection extends EventEmitter {
         }
       }
 
-      var net = require('net')
+      const net = require('net')
       if (net.isIP && net.isIP(host) === 0) {
         options.servername = host
       }
@@ -110,9 +109,8 @@ class Connection extends EventEmitter {
   }
 
   attachListeners(stream) {
-    var self = this
     // Use the appropriate implementation based on whether maxResultSize is enabled
-    if (self._maxResultSize && self._maxResultSize > 0) {
+    if (this._maxResultSize && this._maxResultSize > 0) {
       this._attachListenersWithSizeLimit(stream)
     } else {
       this._attachListenersStandard(stream)
@@ -122,7 +120,7 @@ class Connection extends EventEmitter {
   // Original implementation with no overhead
   _attachListenersStandard(stream) {
     parse(stream, (msg) => {
-      var eventName = msg.name === 'error' ? 'errorMessage' : msg.name
+      const eventName = msg.name === 'error' ? 'errorMessage' : msg.name
       if (this._emitMessage) {
         this.emit('message', msg)
       }
@@ -133,12 +131,12 @@ class Connection extends EventEmitter {
   // Implementation with size limiting logic
   _attachListenersWithSizeLimit(stream) {
     parse(stream, (msg) => {
-      var eventName = msg.name === 'error' ? 'errorMessage' : msg.name
+      const eventName = msg.name === 'error' ? 'errorMessage' : msg.name
 
       // Only track data row messages for result size
       if (msg.name === 'dataRow') {
         // Approximate size by using message length
-        const msgSize = msg.length || 1024 // Default to 1KB if we don't have lenght info
+        const msgSize = msg.length || 1024 // Default to 1KB if we don't have length info
         this._currentResultSize += msgSize
 
         // Check if we've exceeded the max result size

@@ -60,6 +60,7 @@ const startMockServer = (port, badBuffer, callback) => {
           setImmediate(() => {
             socket.write(badBuffer)
           })
+          break
         default:
         // console.log('got code', code)
       }
@@ -84,7 +85,7 @@ const delay = (ms) =>
   })
 
 const testErrorBuffer = (bufferName, errorBuffer) => {
-  suite.testAsync(`Out of order ${bufferName} on simple query is catchable`, async () => {
+  suite.test(`Out of order ${bufferName} on simple query is catchable`, async () => {
     const closeServer = await new Promise((resolve, reject) => {
       return startMockServer(options.port, errorBuffer, (closeServer) => resolve(closeServer))
     })
@@ -109,7 +110,7 @@ const testErrorBuffer = (bufferName, errorBuffer) => {
     await closeServer()
   })
 
-  suite.testAsync(`Out of order ${bufferName} on extended query is catchable`, async () => {
+  suite.test(`Out of order ${bufferName} on extended query is catchable`, async () => {
     const closeServer = await new Promise((resolve, reject) => {
       return startMockServer(options.port, errorBuffer, (closeServer) => resolve(closeServer))
     })
@@ -136,7 +137,7 @@ const testErrorBuffer = (bufferName, errorBuffer) => {
     await closeServer()
   })
 
-  suite.testAsync(`Out of order ${bufferName} on pool is catchable`, async () => {
+  suite.test(`Out of order ${bufferName} on pool is catchable`, async () => {
     const closeServer = await new Promise((resolve, reject) => {
       return startMockServer(options.port, errorBuffer, (closeServer) => resolve(closeServer))
     })
@@ -164,4 +165,10 @@ const testErrorBuffer = (bufferName, errorBuffer) => {
 if (!helper.args.native) {
   testErrorBuffer('parseComplete', buffers.parseComplete())
   testErrorBuffer('commandComplete', buffers.commandComplete('f'))
+  testErrorBuffer('rowDescription', buffers.rowDescription())
+  testErrorBuffer('dataRow', buffers.dataRow())
+  testErrorBuffer('portalSuspended', buffers.portalSuspended())
+  testErrorBuffer('emptyQuery', buffers.emptyQuery())
+  testErrorBuffer('copyIn', buffers.copyIn(0))
+  testErrorBuffer('copyData', buffers.copyData(Buffer.from([1, 2, 3])))
 }

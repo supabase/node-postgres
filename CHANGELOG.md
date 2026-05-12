@@ -4,6 +4,31 @@ For richer information consult the commit log on github with referenced pull req
 
 We do not include break-fix version release in this file.
 
+## pg@8.20.0
+
+- Add [onConnect](https://github.com/brianc/node-postgres/pull/3620) callback to pg.Pool constructor options allowing for async initialization of newly created & connected pooled clients.
+
+## pg@8.19.0
+
+- [Deprecate interal query queue](https://github.com/brianc/node-postgres/pull/3603).
+- Pass connection parameters [to password callback](https://github.com/brianc/node-postgres/pull/3602).
+
+## pg@8.18.0
+
+- [Return the client instance](https://github.com/brianc/node-postgres/pull/3564) as the result of calling `connect` (previously it was `void`).
+
+## pg@8.17.0
+
+- Throw correct error if database URL parsing [fails](https://github.com/brianc/node-postgres/issues/3513).
+
+## pg@8.16.0
+
+- Add support for [min connection pool size](https://github.com/brianc/node-postgres/pull/3438).
+
+## pg@8.15.0
+
+- Add support for [esm](https://github.com/brianc/node-postgres/pull/3423) importing. CommonJS importing is still also supported.
+
 ## pg@8.14.0
 
 - Add support from SCRAM-SAH-256-PLUS i.e. [channel binding](https://github.com/brianc/node-postgres/pull/3356).

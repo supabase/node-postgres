@@ -1,7 +1,5 @@
-const emptyBuffer = Buffer.allocUnsafe(0)
-
 export class BufferReader {
-  private buffer: Buffer = emptyBuffer
+  private buffer: Buffer = Buffer.allocUnsafe(0)
 
   // TODO(bmc): support non-utf8 encoding?
   private encoding: string = 'utf-8'
@@ -46,6 +44,7 @@ export class BufferReader {
   public cstring(): string {
     const start = this.offset
     let end = start
+    // eslint-disable-next-line no-empty
     while (this.buffer[end++] !== 0) {}
     this.offset = end
     return this.buffer.toString(this.encoding, start, end - 1)

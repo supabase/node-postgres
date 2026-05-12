@@ -10,6 +10,7 @@ class Result {
     this.fields = []
     this.rows = []
     this._prebuiltEmptyResultObject = null
+    this._parsers = []
   }
 
   consumeCommand(pq) {
@@ -20,14 +21,17 @@ class Result {
   consumeFields(pq) {
     const nfields = pq.nfields()
     this.fields = new Array(nfields)
-    var row = {}
-    for (var x = 0; x < nfields; x++) {
-      var name = pq.fname(x)
+    const row = {}
+    this._parsers = new Array(nfields)
+    for (let x = 0; x < nfields; x++) {
+      const name = pq.fname(x)
       row[name] = null
+      const typeId = pq.ftype(x)
       this.fields[x] = {
         name: name,
-        dataTypeID: pq.ftype(x),
+        dataTypeID: typeId,
       }
+      this._parsers[x] = this._types.getTypeParser(typeId)
     }
     this._prebuiltEmptyResultObject = { ...row }
   }
@@ -35,14 +39,14 @@ class Result {
   consumeRows(pq) {
     const tupleCount = pq.ntuples()
     this.rows = new Array(tupleCount)
-    for (var i = 0; i < tupleCount; i++) {
+    for (let i = 0; i < tupleCount; i++) {
       this.rows[i] = this._arrayMode ? this.consumeRowAsArray(pq, i) : this.consumeRowAsObject(pq, i)
     }
   }
 
   consumeRowAsObject(pq, rowIndex) {
     const row = { ...this._prebuiltEmptyResultObject }
-    for (var j = 0; j < this.fields.length; j++) {
+    for (let j = 0; j < this.fields.length; j++) {
       row[this.fields[j].name] = this.readValue(pq, rowIndex, j)
     }
     return row
@@ -50,19 +54,18 @@ class Result {
 
   consumeRowAsArray(pq, rowIndex) {
     const row = new Array(this.fields.length)
-    for (var j = 0; j < this.fields.length; j++) {
+    for (let j = 0; j < this.fields.length; j++) {
       row[j] = this.readValue(pq, rowIndex, j)
     }
     return row
   }
 
   readValue(pq, rowIndex, colIndex) {
-    var rawValue = pq.getvalue(rowIndex, colIndex)
+    const rawValue = pq.getvalue(rowIndex, colIndex)
     if (rawValue === '' && pq.getisnull(rowIndex, colIndex)) {
       return null
     }
-    const dataTypeId = this.fields[colIndex].dataTypeID
-    return this._types.getTypeParser(dataTypeId)(rawValue)
+    return this._parsers[colIndex](rawValue)
   }
 }
 
