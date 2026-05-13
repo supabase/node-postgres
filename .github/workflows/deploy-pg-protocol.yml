@@ -45,10 +45,18 @@ jobs:
         # walking up to the workspace root package.json. Without it, npm
         # tries to resolve every workspace package's deps and trips on
         # the unpublished `@supabase/pg-protocol@^X.Y.Z` alias in pg.
-        run: npm install --no-package-lock --no-audit --no-fund --workspaces=false --prefix .
+        # --ignore-scripts skips lifecycle hooks (we run build explicitly
+        # below) so a stale tsbuildinfo can never produce an empty dist/.
+        run: yarn install --no-package-lock --no-audit --no-fund --workspaces=false --ignore-scripts --prefix .
 
-      - name: Build package
-        run: npm run build
+      - name: Build package (clean rebuild)
+        # `npm run build` triggers `prebuild` which removes any stale
+        # `dist/` and `tsconfig.tsbuildinfo`. Without the clean step a
+        # checked-in tsbuildinfo (or one left by a previous run) would
+        # make `tsc --incremental` exit successfully with zero output —
+        # producing a broken tarball with no compiled code. See the
+        # 1.13.1 incident.
+        run: yarn run build
 
       # Ensure npm 11.5.1 or later is installed for trusted publishing support
       - name: Update npm
