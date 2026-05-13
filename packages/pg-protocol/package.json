@@ -1,6 +1,6 @@
 {
   "name": "@supabase/pg-protocol",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "description": "The postgres client/server binary protocol, implemented in TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,6 +26,8 @@
   },
   "scripts": {
     "test": "mocha dist/**/*.test.js",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true});require('fs').rmSync('tsconfig.tsbuildinfo',{force:true})\"",
+    "prebuild": "npm run clean",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "prepublish": "yarn build",
