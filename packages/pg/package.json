@@ -46,7 +46,7 @@
     "co": "4.6.0",
     "pg-copy-streams": "0.3.0",
     "typescript": "^6.0.3",
-    "vitest": "~3.0.9",
+    "vitest": "~3.2.6",
     "wrangler": "^3.x"
   },
   "optionalDependencies": {
