@@ -46,8 +46,8 @@
     "co": "4.6.0",
     "pg-copy-streams": "0.3.0",
     "typescript": "^6.0.3",
-    "vitest": "~3.0.9",
-    "wrangler": "^3.x"
+    "vitest": "~4.1.8",
+    "wrangler": "^4.x"
   },
   "optionalDependencies": {
     "pg-cloudflare": "^1.3.0"
